@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MulitaMiner · Laboratório de IA Aplicada</title>
+<meta name="description" content="Extração estruturada de vulnerabilidades a partir de relatórios PDF de scanners, com o modelo rodando dentro da organização. Projeto da disciplina Laboratório de IA Aplicada, UNIPAMPA.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<script>try{const s=localStorage.getItem('theme');if(s==='light'||s==='dark')document.documentElement.dataset.theme=s;const l=localStorage.getItem('lang');if(l==='en')document.documentElement.lang='en'}catch(e){}</script>
+</head>
+<body>
+<a class="skip" href="#main" data-i18n="skip">Pular para o conteúdo</a>
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="brand" href="#"><img class="on-dark" src="assets/logo-light.svg" alt=""><img class="on-light" src="assets/logo-dark.svg" alt=""><span>Mulita<b>Miner</b></span></a>
+    <button class="menu" id="menu" type="button" aria-expanded="false" aria-controls="nav" aria-label="Menu">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path class="i1" d="M4 7h16M4 12h16M4 17h16"/><path class="i2" d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <nav id="nav">
+      <a href="#problema" data-i18n="nav_problem">Problema</a>
+      <a href="#como" data-i18n="nav_how">Como funciona</a>
+      <a href="#resultados" data-i18n="nav_results">Resultados</a>
+      <a href="#atividades" data-i18n="nav_tasks">Atividades</a>
+      <a href="#equipe" data-i18n="nav_team">Equipe</a>
+      <span class="ctrl">
+        <span class="lang" role="group" aria-label="Idioma">
+          <button type="button" data-lang="pt-BR" aria-pressed="true">PT</button><button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </span>
+        <button class="theme" id="theme" type="button" aria-label="Tema claro ou escuro">
+          <svg class="sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </span>
+      <a class="cta" href="https://github.com/INARI18/MulitaMiner2" target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<section class="hero">
+  <div class="wrap">
+    <p class="kick" data-i18n="hero_kick">Laboratório de IA Aplicada · UNIPAMPA · 2026</p>
+    <h1 data-i18n="hero_h1">Do PDF do scanner a dados estruturados, com o modelo dentro da organização.</h1>
+    <p class="lead" data-i18n="hero_lead">O MulitaMiner lê relatórios PDF de scanners de vulnerabilidade e devolve um registro por achado, num esquema único. O modelo de linguagem que faz a extração roda localmente, ajustado com dados do próprio scanner.</p>
+    <p class="authors">Beatriz Machado · Cristhian Kapelinski · Guilherme Klauberg</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="#resultados" data-i18n="hero_cta">Ver resultados</a>
+      <a class="btn btn-ghost" href="#como" data-i18n="hero_cta2">Como funciona</a>
+    </div>
+    <div class="stats" aria-label="Números do projeto">
+      <div class="stat"><b>4</b><span data-i18n="st_scanners">scanners suportados</span></div>
+      <div class="stat"><b data-num="6841">6.841</b><span data-i18n="st_train">exemplos de treino, sem anotação manual</span></div>
+      <div class="stat"><b data-num="1028">1.028</b><span data-i18n="st_test">vulnerabilidades na prova, 8 relatórios</span></div>
+      <div class="stat"><b>97%</b><span data-i18n="st_recall">encontradas pelo modelo ajustado, local</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="problema">
+  <div class="wrap">
+    <p class="kick" data-i18n="pb_kick">O problema</p>
+    <h2 data-i18n="pb_h2">O relatório entra como texto, não como dado.</h2>
+    <div class="grid3">
+      <div class="card"><div class="n">1</div><h3 data-i18n="pb1_h">Um formato por ferramenta</h3><p data-i18n="pb1_p">Summary no OpenVAS, Synopsis no Nessus. Mesma informação, nomes e layouts diferentes.</p></div>
+      <div class="card"><div class="n">2</div><h3 data-i18n="pb2_h">Triagem é leitura manual</h3><p data-i18n="pb2_p">Consolidar, comparar e priorizar exige transcrever achados à mão, relatório por relatório.</p></div>
+      <div class="card"><div class="n">3</div><h3 data-i18n="pb3_h">A nuvem não é saída fácil</h3><p data-i18n="pb3_p">O relatório é o mapa da superfície de ataque: hosts, portas e falhas. Mandar isso para fora é um risco (LGPD, art. 46).</p></div>
+    </div>
+    <div class="objective">
+      <div>
+        <p class="kick" data-i18n="ob_kick">Objetivo</p>
+        <h3 data-i18n="ob_h">Um PDF entra. Um esquema único sai.</h3>
+        <p data-i18n="ob_p">Dez campos comuns a todos os scanners, preenchidos pelo modelo a partir do texto do relatório.</p>
+        <div class="chips">
+          <span class="chip" data-i18n="f_name">nome</span><span class="chip" data-i18n="f_sev">severidade</span><span class="chip">host</span><span class="chip" data-i18n="f_port">porta</span><span class="chip" data-i18n="f_proto">protocolo</span><span class="chip" data-i18n="f_desc">descrição</span><span class="chip" data-i18n="f_sol">solução</span><span class="chip" data-i18n="f_imp">impacto</span><span class="chip" data-i18n="f_ref">referências</span><span class="chip" data-i18n="f_src">origem</span>
+        </div>
+      </div>
+      <div class="pair">
+        <div class="pane"><div class="ph">PDF · OpenVAS</div><pre>{
+  <i>"name"</i>: "rsh Service Detection",
+  <i>"severity"</i>: "LOG",
+  <i>"cvss"</i>: 0.0,
+  <i>"host"</i>: "172.30.1.1",
+  <i>"port"</i>: 514,
+  <i>"protocol"</i>: "tcp",
+  <i>"source"</i>: "openvas"
+}</pre></div>
+        <div class="pane"><div class="ph">PDF · Nessus</div><pre>{
+  <i>"name"</i>: "rsh Service Detection",
+  <i>"severity"</i>: "HIGH",
+  <i>"cvss"</i>: 7.5,
+  <i>"host"</i>: "172.30.1.1",
+  <i>"port"</i>: 514,
+  <i>"protocol"</i>: "tcp",
+  <i>"source"</i>: "nessus"
+}</pre></div>
+      </div>
+    </div>
+    <p class="caption" data-i18n="ob_cap">Formatos diferentes na entrada, os mesmos campos na saída. Exemplo real dos dois scanners sobre o mesmo serviço.</p>
+  </div>
+</section>
+
+<section class="block" id="como">
+  <div class="wrap">
+    <p class="kick" data-i18n="how_kick">Como funciona</p>
+    <h2 data-i18n="how_h2">Pipeline fixo, modelo trocável.</h2>
+    <p class="sub" data-i18n="how_sub">Cinco etapas. A contagem de achados é fixada antes de qualquer chamada ao modelo, e só uma etapa usa IA.</p>
+    <ol class="steps">
+      <li><img src="assets/stages/01-read.png" alt="" width="640" height="427"><div><span class="n">01</span><h3 data-i18n="s1_h">Ler</h3><p data-i18n="s1_p">O texto sai do PDF sem OCR (pypdfium2). Cabeçalhos de página e quebras são removidos antes do modelo.</p></div></li>
+      <li><img src="assets/stages/02-segment.png" alt="" width="640" height="427"><div><span class="n">02</span><h3 data-i18n="s2_h">Segmentar</h3><p data-i18n="s2_p">Uma expressão regular por scanner acha a linha que abre cada achado. Um bloco por achado, com id fixo: 34 blocos no PDF, 34 linhas na planilha do scanner.</p></div></li>
+      <li><img src="assets/stages/03-extract.png" alt="" width="640" height="427"><div><span class="n">03</span><h3 data-i18n="s3_h">Extrair</h3><p data-i18n="s3_p">Blocos inteiros vão ao modelo em lotes, com um esquema JSON. O bloco 21 volta como bloco 21, ou a resposta é recusada e refeita em lotes menores.</p></div></li>
+      <li><img src="assets/stages/04-consolidate.png" alt="" width="640" height="427"><div><span class="n">04</span><h3 data-i18n="s4_h">Consolidar</h3><p data-i18n="s4_p">Severidade e CVSS normalizados, duplicatas fundidas. Host, porta e protocolo vêm por regra, não do modelo.</p></div></li>
+      <li><img src="assets/stages/05-export.png" alt="" width="640" height="427"><div><span class="n">05</span><h3 data-i18n="s5_h">Exportar</h3><p data-i18n="s5_p">Um registro por achado, em JSON, XLSX, CSV, SARIF, CSAF ou DefectDojo. Trocar de modelo é trocar um argumento.</p></div></li>
+    </ol>
+    <div class="note"><b data-i18n="how_note_b">Scanner novo:</b> <span data-i18n="how_note">um arquivo JSON de configuração e um prompt, sem mudar código.</span></div>
+  </div>
+</section>
+
+<section class="block" id="metodo">
+  <div class="wrap">
+    <p class="kick" data-i18n="me_kick">Método</p>
+    <h2 data-i18n="me_h2">O gabarito vem da própria ferramenta.</h2>
+    <p class="sub" data-i18n="me_sub">O scanner exporta o PDF e a planilha do mesmo scan. Pareando os dois por host e id do achado, cada vulnerabilidade vira um par pergunta e resposta, sem anotação manual.</p>
+    <div class="grid2">
+      <div class="card">
+        <h3 data-i18n="me_data_h">Dados de treino</h3>
+        <div class="tiles">
+          <div class="tile"><b>136</b><span data-i18n="me_t1">relatórios: PDF + exportação</span></div>
+          <div class="tile"><b data-num="6841">6.841</b><span data-i18n="me_t2">exemplos · 6.187 treino / 654 validação</span></div>
+        </div>
+        <div class="chart" id="chart-train" data-title-key="ch_train_t" data-title="Exemplos de treino por scanner"></div>
+        <p class="caption" data-i18n="me_cap">80% é OpenVAS: por isso a avaliação é reportada por scanner, não só agregada.</p>
+      </div>
+      <div class="card">
+        <h3 data-i18n="me_models_h">Três modelos, a mesma prova</h3>
+        <ul class="models">
+          <li><i class="sw local"></i><div><b data-i18n="m_local">Local</b><span data-i18n="m_local_p">Qwen2.5 1,5B, sem treino. Roda numa placa de vídeo da organização; só recebe exemplos no pedido.</span></div></li>
+          <li><i class="sw tuned"></i><div><b data-i18n="m_tuned">Ajustado</b><span data-i18n="m_tuned_p">O mesmo Qwen2.5 1,5B, ajustado com QLoRA em 4 bits sobre os 6.841 exemplos. O sistema proposto.</span></div></li>
+          <li><i class="sw cloud"></i><div><b data-i18n="m_cloud">Nuvem</b><span data-i18n="m_cloud_p">DeepSeek V4.1 Flash via API, few-shot. O teto de qualidade, ao custo de o relatório sair da organização.</span></div></li>
+        </ul>
+        <p class="caption" data-i18n="me_test">Prova: 8 relatórios inéditos, fora do treino, com 1.028 vulnerabilidades. OpenVAS 318 (3 relatórios), Nessus 268 (1), Qualys 419 (1), ZAP 23 (3).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="resultados">
+  <div class="wrap">
+    <p class="kick" data-i18n="re_kick">Resultados</p>
+    <h2 data-i18n="re_h2">Quase igual à nuvem, em um terço do tempo, sem o relatório sair.</h2>
+    <p class="sub" data-i18n="re_sub">Média de 5 rodadas sobre os 8 relatórios de teste. O ajuste fino recupera quase toda a diferença entre o modelo local e o de nuvem.</p>
+
+    <div class="card compare">
+      <table class="cmp">
+        <thead><tr><th></th><th><i class="sw local"></i><span data-i18n="m_local">Local</span></th><th class="hl"><i class="sw tuned"></i><span data-i18n="m_tuned">Ajustado</span></th><th><i class="sw cloud"></i><span data-i18n="m_cloud">Nuvem</span></th></tr></thead>
+        <tbody>
+          <tr><th data-i18n="c_found">Vulnerabilidades encontradas</th><td>92%<small>942</small></td><td class="hl">97%<small>998</small></td><td>99%<small data-num="1019">1.019</small></td></tr>
+          <tr><th data-i18n="c_invented">Vulnerabilidades inventadas</th><td>34</td><td class="hl">4</td><td>0</td></tr>
+          <tr><th data-i18n="c_blank">Campos em branco</th><td data-num="3818">3.818</td><td class="hl" data-num="1322">1.322</td><td>40</td></tr>
+          <tr><th data-i18n="c_time">Tempo para os 8 relatórios</th><td>39 min</td><td class="hl">33 min</td><td>98 min</td></tr>
+          <tr><th data-i18n="c_cost">Custo de API</th><td>US$ 0</td><td class="hl">US$ 0</td><td data-i18n="cost96">US$ 0,96</td></tr>
+          <tr><th data-i18n="c_inside">Dentro da organização</th><td data-i18n="yes">sim</td><td class="hl" data-i18n="yes">sim</td><td data-i18n="no">não</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid2 charts">
+      <div class="card">
+        <h3 data-i18n="ch_recall_t">Vulnerabilidades encontradas, por scanner</h3>
+        <p class="caption" data-i18n="ch_recall_s">Achados do relatório que viraram registro. Em percentual.</p>
+        <div class="chart" id="chart-recall"></div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="ch_text_t">Descrição: quanto o texto bate</h3>
+        <p class="caption" data-i18n="ch_text_s">Similaridade palavra por palavra com a descrição do scanner, de 0 a 1.</p>
+        <div class="chart" id="chart-text"></div>
+      </div>
+    </div>
+
+    <div class="grid2 charts">
+      <div class="card">
+        <h3 data-i18n="tb_short_t">Campos curtos: acerto exato</h3>
+        <p class="caption" data-i18n="tb_short_s">Igual ao gabarito ou errado. Um traço: o scanner não tem esse campo.</p>
+        <table class="data" id="tb-short">
+          <thead><tr><th data-i18n="tb_field">Campo</th><th>Scanner</th><th data-i18n="m_local">Local</th><th class="hl" data-i18n="m_tuned">Ajustado</th><th data-i18n="m_cloud">Nuvem</th></tr></thead>
+          <tbody>
+            <tr><th rowspan="4" data-i18n="f_sev_c">Severidade</th><td>OpenVAS</td><td>100%</td><td class="hl">100%</td><td>100%</td></tr>
+            <tr><td>Nessus</td><td>96%</td><td class="hl">99%</td><td>100%</td></tr>
+            <tr><td>Qualys</td><td>57%</td><td class="hl">95%</td><td>100%</td></tr>
+            <tr><td>ZAP</td><td>100%</td><td class="hl">100%</td><td>100%</td></tr>
+            <tr><th rowspan="4" data-i18n="f_port_c">Porta</th><td>OpenVAS</td><td>100%</td><td class="hl">100%</td><td>99%</td></tr>
+            <tr><td>Nessus</td><td>0%</td><td class="hl">68%</td><td>100%</td></tr>
+            <tr><td>Qualys</td><td>0%</td><td class="hl">67%</td><td>100%</td></tr>
+            <tr><td>ZAP</td><td>—</td><td class="hl">—</td><td>—</td></tr>
+            <tr><th rowspan="4" data-i18n="f_id_c">Id do teste</th><td>OpenVAS</td><td>—</td><td class="hl">—</td><td>—</td></tr>
+            <tr><td>Nessus</td><td>99%</td><td class="hl">93%</td><td>100%</td></tr>
+            <tr><td>Qualys</td><td>87%</td><td class="hl">79%</td><td>100%</td></tr>
+            <tr><td>ZAP</td><td>77%</td><td class="hl">96%</td><td>100%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3 data-i18n="tb_err_t">Erros por tipo</h3>
+        <p class="caption" data-i18n="tb_err_s">Ocorrências nos 8 relatórios. O modelo ajustado troca campos em branco por um erro novo: o número do bloco.</p>
+        <table class="data" id="tb-err">
+          <thead><tr><th data-i18n="tb_type">Tipo</th><th data-i18n="m_local">Local</th><th class="hl" data-i18n="m_tuned">Ajustado</th><th data-i18n="m_cloud">Nuvem</th></tr></thead>
+          <tbody>
+            <tr><th data-i18n="e_blank">Campo em branco</th><td data-num="3818">3.818</td><td class="hl" data-num="1322">1.322</td><td>40</td></tr>
+            <tr><th data-i18n="e_cut">Texto cortado</th><td>261</td><td class="hl">15</td><td>25</td></tr>
+            <tr><th data-i18n="e_sev">Severidade errada</th><td>167</td><td class="hl">24</td><td>0</td></tr>
+            <tr><th data-i18n="e_block">Número de bloco errado</th><td>56</td><td class="hl">166</td><td>0</td></tr>
+            <tr><th data-i18n="e_lost">Vulnerabilidade perdida</th><td>86</td><td class="hl">30</td><td>9</td></tr>
+            <tr><th data-i18n="e_extra">Texto com sobra</th><td>54</td><td class="hl">14</td><td>598</td></tr>
+          </tbody>
+        </table>
+        <div class="finding">
+          <p><b data-i18n="fd1_b">Onde o ajustado erra.</b> <span data-i18n="fd1">No OpenVAS, o scanner com mais exemplos no treino, a descrição fica em branco em metade dos achados (local 90%, nuvem 100% preenchidas).</span></p>
+          <p><b data-i18n="fd2_b">Conta em vez de ler.</b> <span data-i18n="fd2">Em 166 lotes o modelo respondeu "bloco 1, bloco 2" para os blocos 6 e 7. O número fora do lote é descartado e o lote refeito, por isso não vira registro errado.</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="atividades">
+  <div class="wrap">
+    <p class="kick" data-i18n="at_kick">Atividades</p>
+    <h2 data-i18n="at_h2">O projeto, tarefa por tarefa.</h2>
+    <p class="sub" data-i18n="at_sub">As apresentações entregues na disciplina, em ordem. Cada uma abre em PDF.</p>
+    <div class="tasks">
+      <a class="card task" href="pdfs/tarefa-04.pdf" target="_blank" rel="noopener"><span class="n">04</span><h3 data-i18n="t4_h">Proposta</h3><p data-i18n="t4_p">Problema, objetivo, arquitetura, decisões de IA, dados e plano experimental em oito etapas.</p><span class="meta">16 slides · PDF ↗</span></a>
+      <a class="card task" href="pdfs/tarefa-06.pdf" target="_blank" rel="noopener"><span class="n">06</span><h3 data-i18n="t6_h">Contextualização</h3><p data-i18n="t6_p">O que é um scanner de vulnerabilidades e por que os relatórios dele viraram um problema.</p><span class="meta">11 slides · PDF ↗</span></a>
+      <a class="card task" href="pdfs/tarefa-07.pdf" target="_blank" rel="noopener"><span class="n">07</span><h3 data-i18n="t7_h">Funcionamento</h3><p data-i18n="t7_p">Como um PDF vira dados, etapa por etapa, seguindo um achado real, e como vamos medir.</p><span class="meta">12 slides · PDF ↗</span></a>
+      <a class="card task" href="pdfs/tarefa-08.pdf" target="_blank" rel="noopener"><span class="n">08</span><h3 data-i18n="t8_h">Resultados com um modelo de nuvem</h3><p data-i18n="t8_p">DeepSeek V4.1 Flash nos 8 relatórios de teste: a referência de qualidade.</p><span class="meta">9 slides · PDF ↗</span></a>
+      <a class="card task" href="pdfs/tarefa-09.pdf" target="_blank" rel="noopener"><span class="n">09</span><h3 data-i18n="t9_h">Resultados com um modelo local</h3><p data-i18n="t9_p">Qwen2.5 1,5B sem treino: o mesmo teste, sem o relatório sair da organização.</p><span class="meta">9 slides · PDF ↗</span></a>
+      <a class="card task" href="pdfs/tarefa-10.pdf" target="_blank" rel="noopener"><span class="n">10</span><h3 data-i18n="t10_h">Resultados com o modelo ajustado</h3><p data-i18n="t10_p">O modelo local treinado com o gabarito, e os três lado a lado.</p><span class="meta">11 slides · PDF ↗</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="equipe">
+  <div class="wrap">
+    <p class="kick" data-i18n="tm_kick">Equipe</p>
+    <h2 data-i18n="tm_h2">Quem fez.</h2>
+    <div class="grid3 team">
+      <div class="card person"><b>Beatriz Machado</b><span>UNIPAMPA</span></div>
+      <div class="card person"><b>Cristhian Kapelinski</b><span>UNIPAMPA</span></div>
+      <div class="card person"><b>Guilherme Klauberg</b><span>UNIPAMPA</span></div>
+    </div>
+    <p class="caption" data-i18n="tm_cap">Disciplina Laboratório de IA Aplicada, Universidade Federal do Pampa, 2026. O MulitaMiner também é um projeto de pesquisa do grupo; o código e o modelo estão públicos.</p>
+    <div class="actions">
+      <a class="btn btn-ghost" href="https://github.com/INARI18/MulitaMiner2" target="_blank" rel="noopener" data-i18n="lk_code">Código no GitHub ↗</a>
+      <a class="btn btn-ghost" href="https://huggingface.co/Inari18/mulita-extractor-qwen2.5-1.5b" target="_blank" rel="noopener" data-i18n="lk_model">Modelo no Hugging Face ↗</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Mulita<b>Miner</b> · <span data-i18n="ft">Laboratório de IA Aplicada · UNIPAMPA · 2026</span></span>
+    <span class="fine" data-i18n="ft_fine">Beatriz Machado, Cristhian Kapelinski e Guilherme Klauberg</span>
+  </div>
+</footer>
+
+<div class="tip" id="tip" role="tooltip" hidden></div>
+<script src="assets/app.js"></script>
+</body>
+</html>
