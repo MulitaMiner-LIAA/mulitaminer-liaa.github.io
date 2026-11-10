@@ -65,7 +65,11 @@
     fd1_b: 'Where the fine-tuned model fails.', fd1: 'On OpenVAS, the scanner with the most training examples, the description is left blank in half of the findings (local 90%, cloud 100% filled).',
     fd2_b: 'Counting instead of reading.', fd2: 'In 166 batches the model answered "block 1, block 2" for blocks 6 and 7. A number outside the batch is discarded and the batch redone, so it never becomes a wrong record.',
     at_kick: 'Activities', at_h2: 'The project, task by task.', at_sub: 'The presentations delivered in the course, in order. Each one opens as a PDF.',
+    t1_h: 'Ideation with AI', t1_p: 'Choosing the topic and the first proposal, using AI tools to explore problems and solutions.',
+    t2_h: 'Investigation and feasibility', t2_p: 'Problem, data, AI approach, related work and feasibility: the revised proposal.',
+    t3_h: 'Specification and plan', t3_p: 'Problem specification, data, architecture, MVP, experimental plan, success criteria, schedule and risks.',
     t4_h: 'Proposal', t4_p: 'Problem, goal, architecture, AI decisions, data and an eight-step experimental plan.',
+    t5_h: 'Initial development', t5_p: 'The first working version of the tool, delivered as a code repository.',
     t6_h: 'Context', t6_p: 'What a vulnerability scanner is and why its reports became a problem.',
     t7_h: 'How it works', t7_p: 'How a PDF becomes data, stage by stage, following one real finding, and how we will measure it.',
     t8_h: 'Results with a cloud model', t8_p: 'DeepSeek V4.1 Flash on the 8 test reports: the quality reference.',
@@ -75,10 +79,10 @@
     tm_cap: 'Applied AI Laboratory course, Federal University of Pampa, 2026. MulitaMiner is also a research project of the group; the code and the model are public.',
     lk_code: 'Code on GitHub ↗', lk_model: 'Model on Hugging Face ↗',
     ft: 'Applied AI Laboratory · UNIPAMPA · 2026', ft_fine: 'Beatriz Machado, Cristhian Kapelinski and Guilherme Klauberg',
-    title: 'MulitaMiner · Applied AI Laboratory', table: 'Table', chart: 'Chart', slides: 'slides',
+    title: 'MulitaMiner · Applied AI Laboratory', table: 'Table', chart: 'Chart', slides: 'slides', pages: 'pages',
   };
   // Portuguese strings that live only in the script (everything else is read from the HTML).
-  const PT = { title: document.title, table: 'Tabela', chart: 'Gráfico', slides: 'slides', ch_train_t: 'Exemplos de treino por scanner',
+  const PT = { title: document.title, table: 'Tabela', chart: 'Gráfico', slides: 'slides', pages: 'páginas', ch_train_t: 'Exemplos de treino por scanner',
     tb_field: 'Campo', f_sev_c: 'Severidade', f_port_c: 'Porta', f_id_c: 'Id do teste', na: 'não se aplica' };
   $$('[data-i18n]').forEach(el => { PT[el.dataset.i18n] = el.innerHTML; });
   let lang = root.lang === 'en' ? 'en' : 'pt-BR';
@@ -88,7 +92,7 @@
     root.lang = lang;
     document.title = t('title');
     $$('[data-i18n]').forEach(el => { const v = t(el.dataset.i18n); if (v !== undefined) el.innerHTML = v; });
-    $$('.task .meta').forEach(el => { el.textContent = el.textContent.replace(/slides/, t('slides')); });
+    $$('.task .meta').forEach(el => { el.textContent = el.textContent.replace(/slides|pages/, t('slides')).replace(/páginas|pages/, t('pages')); });
     $$('[data-num]').forEach(el => { el.textContent = fmt(+el.dataset.num); });
     $$('.lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
     drawCharts();
