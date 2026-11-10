@@ -55,7 +55,7 @@
     re_kick: 'Results', re_h2: 'Almost as good as the cloud, in a third of the time, without the report leaving.',
     re_sub: 'Average of 5 runs over the 8 test reports. Fine-tuning recovers almost all of the gap between the local model and the cloud one.',
     cmp_t: 'The three side by side', cmp_s: '8 test reports · average of 5 runs', cmp_tag: 'proposed system',
-    c_found: 'Vulnerabilities found', c_invented: 'Vulnerabilities invented', c_blank: 'Blank fields', c_time: 'Time for the 8 reports', c_cost: 'API cost', c_inside: 'Inside the organization', yes: 'yes', no: 'no', cost96: 'US$ 0.96',
+    c_found: 'Vulnerabilities found (recall)', c_invented: 'Vulnerabilities invented', c_blank: 'Blank fields', c_time: 'Time for the 8 reports', c_cost: 'API cost', c_inside: 'Inside the organization', yes: 'yes', no: 'no', cost96: 'US$ 0.96',
     ch_recall_t: 'Vulnerabilities found, per scanner', ch_recall_s: 'Recall: findings in the ground truth that became a record, in percent.',
     ch_text_t: 'Description: how closely the text matches', ch_text_s: 'ROUGE-L between the extracted description and the one in the scanner report, from 0 to 1: word-level overlap.',
     tb_short_t: 'Short fields: exact match', tb_short_s: 'Equal to the ground truth or wrong. A dash: the scanner has no such field.',

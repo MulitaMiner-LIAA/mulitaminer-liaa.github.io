@@ -48,6 +48,6 @@ navegador.
 - `assets/style.css`: estilos, tema claro e escuro
 - `assets/app.js`: troca de idioma e de tema, gráficos em SVG
 - `assets/stages/`: ilustrações das etapas do pipeline
-- `pdfs/`: as apresentações entregues na disciplina (tarefas 4 a 10)
+- `pdfs/`: as entregas da disciplina (tarefas 1 a 10; a 5 foi o próprio repositório de código, sem PDF)
 
 Para atualizar uma apresentação, substitua o PDF em `pdfs/` mantendo o nome.
