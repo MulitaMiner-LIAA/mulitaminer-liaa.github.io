@@ -6,7 +6,8 @@ Klauberg. Publicada pelo GitHub Pages a partir deste repositório.
 
 ## A ferramenta
 
-Scanners de vulnerabilidade (OpenVAS, Nessus, Qualys, ZAP) entregam o
+Scanners de vulnerabilidade (OpenVAS/Greenbone, Tenable Nessus, Tenable WAS,
+Tenable Vulnerability Management, Qualys, Acunetix 360, OWASP ZAP) entregam o
 resultado como um relatório em PDF, cada um com seu layout e seu vocabulário.
 Para consolidar, comparar ou priorizar os achados de várias ferramentas, alguém
 precisa ler e transcrever à mão.
