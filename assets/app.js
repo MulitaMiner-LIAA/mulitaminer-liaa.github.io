@@ -57,7 +57,7 @@
     cmp_t: 'The three side by side', cmp_s: '8 test reports · average of 5 runs', cmp_tag: 'proposed system',
     c_found: 'Vulnerabilities found', c_invented: 'Vulnerabilities invented', c_blank: 'Blank fields', c_time: 'Time for the 8 reports', c_cost: 'API cost', c_inside: 'Inside the organization', yes: 'yes', no: 'no', cost96: 'US$ 0.96',
     ch_recall_t: 'Vulnerabilities found, per scanner', ch_recall_s: 'Recall: findings in the ground truth that became a record, in percent.',
-    ch_text_t: 'Description: how closely the text matches', ch_text_s: 'Token F1 between the extracted description and the one in the scanner report, from 0 to 1: word-level overlap.',
+    ch_text_t: 'Description: how closely the text matches', ch_text_s: 'ROUGE-L between the extracted description and the one in the scanner report, from 0 to 1: word-level overlap.',
     tb_short_t: 'Short fields: exact match', tb_short_s: 'Equal to the ground truth or wrong. A dash: the scanner has no such field.',
     tb_field: 'Field', f_sev_c: 'Severity', f_port_c: 'Port', f_id_c: 'Test id', na: 'not applicable',
     tb_err_t: 'Errors by type', tb_err_s: 'Occurrences across the 8 reports. The fine-tuned model trades blank fields for a new error: the block number.',
