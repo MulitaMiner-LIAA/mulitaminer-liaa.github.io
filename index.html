@@ -55,7 +55,7 @@
       <div class="stat"><b>7</b><span data-i18n="st_scanners">scanners suportados</span></div>
       <div class="stat"><b data-num="6841">6.841</b><span data-i18n="st_train">exemplos de treino, sem anotação manual</span></div>
       <div class="stat"><b data-num="1028">1.028</b><span data-i18n="st_test">vulnerabilidades na prova, 8 relatórios</span></div>
-      <div class="stat"><b>97%</b><span data-i18n="st_recall">encontradas pelo modelo ajustado, local</span></div>
+      <div class="stat"><b>97%</b><span data-i18n="st_recall">encontradas pelo modelo ajustado, local (recall)</span></div>
     </div>
   </div>
 </section>
@@ -178,19 +178,19 @@
     <div class="grid2 charts">
       <div class="card">
         <h3 data-i18n="ch_recall_t">Vulnerabilidades encontradas, por scanner</h3>
-        <p class="caption" data-i18n="ch_recall_s">Achados do relatório que viraram registro. Em percentual.</p>
+        <p class="caption" data-i18n="ch_recall_s">Recall: achados do gabarito que viraram registro, em percentual.</p>
         <div class="chart" id="chart-recall"></div>
       </div>
       <div class="card">
         <h3 data-i18n="ch_text_t">Descrição: quanto o texto bate</h3>
-        <p class="caption" data-i18n="ch_text_s">Similaridade palavra por palavra com a descrição do scanner, de 0 a 1.</p>
+        <p class="caption" data-i18n="ch_text_s">F1 de tokens entre a descrição extraída e a do scanner, de 0 a 1: sobreposição palavra por palavra.</p>
         <div class="chart" id="chart-text"></div>
       </div>
     </div>
 
     <div class="grid2 charts">
       <div class="card">
-        <h3 data-i18n="tb_short_t">Campos curtos: acerto exato</h3>
+        <h3 data-i18n="tb_short_t">Campos curtos: acerto exato (exact match)</h3>
         <p class="caption" data-i18n="tb_short_s">Igual ao gabarito ou errado. Um traço: o scanner não tem esse campo.</p>
         <div class="chart" id="chart-short"></div>
       </div>
