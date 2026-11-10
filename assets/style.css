@@ -154,6 +154,22 @@ nav a.cta:hover{background:var(--btn-h)}
 .cmp .meter:after{content:"";position:absolute;inset:0;width:calc(var(--v) * 1%);border-radius:2px}
 .cmp .meter.local:after{background:var(--s-local)}.cmp .meter.tuned:after{background:var(--s-tuned)}.cmp .meter.cloud:after{background:var(--s-cloud)}
 .cmp .ok{color:var(--text)}.cmp .nope{color:var(--muted);font-weight:500}
+/* narrow screens: no sideways table; each metric becomes a label plus three cells */
+@media (max-width:860px){
+  .compare{overflow:visible;padding:.6rem 1rem 1rem}
+  .cmphead{flex-direction:column;align-items:flex-start;gap:.15rem}
+  .cmp{min-width:0;display:block}
+  .cmp thead{display:none}
+  .cmp tbody{display:block}
+  .cmp tbody tr{display:grid;grid-template-columns:repeat(3,1fr);gap:0 .45rem;padding:.75rem 0;border-bottom:1px solid var(--border)}
+  .cmp tbody tr:last-child{border-bottom:0}
+  .cmp tbody th{grid-column:1/-1;padding:0 0 .5rem;border:0;position:static;background:transparent}
+  .cmp td{padding:.4rem .5rem;border:0;border-radius:var(--r-sm);font-size:.98rem}
+  .cmp td::before{content:attr(data-model);display:block;font:600 .58rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.15rem}
+  .cmp td.hl::before{color:var(--amber)}
+  .cmp tbody tr:last-child td.hl{border-radius:var(--r-sm)}
+  .cmp .meter{max-width:none}
+}
 table{border-collapse:collapse;width:100%;font-size:.92rem}
 .cmp th,.cmp td{padding:.85rem .8rem;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
 .cmp tbody tr:last-child th,.cmp tbody tr:last-child td{border-bottom:0}
@@ -163,8 +179,6 @@ table{border-collapse:collapse;width:100%;font-size:.92rem}
 .cmp td{font:600 1.05rem var(--sans);font-variant-numeric:tabular-nums;color:var(--text)}
 .cmp td small{display:block;font:400 .72rem var(--mono);color:var(--muted)}
 .cmp .hl{background:var(--accent-soft);border-bottom-color:rgba(234,88,12,.22)}
-.cmp{min-width:640px}
-.cmp th:first-child,.cmp td:first-child{position:sticky;left:0;background:var(--raised);z-index:1}
 .cmp thead th.hl{color:var(--amber)}
 .charts .card h3{font-size:1rem}
 .charts .caption{margin-top:.3rem}

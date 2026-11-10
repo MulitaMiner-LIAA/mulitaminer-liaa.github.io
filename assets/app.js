@@ -96,6 +96,8 @@
     $$('.task .meta').forEach(el => { el.textContent = el.textContent.replace(/slides|pages/, t('slides')).replace(/páginas|pages/, t('pages')); });
     $$('[data-num]').forEach(el => { el.textContent = fmt(+el.dataset.num); });
     $$('.lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+    // model name over each cell when the comparison table stacks on narrow screens
+    $$('.cmp tbody tr').forEach(tr => $$('td', tr).forEach((td, k) => { td.dataset.model = SERIES[k].name(); }));
     drawCharts();
   };
   $$('.lang button').forEach(b => b.addEventListener('click', () => {
