@@ -54,10 +54,11 @@
     me_test: 'Test: 8 unseen reports, held out of training, with 1,028 vulnerabilities. OpenVAS 318 (3 reports), Nessus 268 (1), Qualys 419 (1), ZAP 23 (3).',
     re_kick: 'Results', re_h2: 'Almost as good as the cloud, in a third of the time, without the report leaving.',
     re_sub: 'Average of 5 runs over the 8 test reports. Fine-tuning recovers almost all of the gap between the local model and the cloud one.',
+    cmp_t: 'The three side by side', cmp_s: '8 test reports · average of 5 runs', cmp_tag: 'proposed system',
     c_found: 'Vulnerabilities found', c_invented: 'Vulnerabilities invented', c_blank: 'Blank fields', c_time: 'Time for the 8 reports', c_cost: 'API cost', c_inside: 'Inside the organization', yes: 'yes', no: 'no',
     ch_recall_t: 'Vulnerabilities found, per scanner', ch_recall_s: 'Findings in the report that became a record. In percent.',
     ch_text_t: 'Description: how closely the text matches', ch_text_s: 'Word-by-word similarity with the scanner\'s description, from 0 to 1.',
-    tb_short_t: 'Short fields: exact match', tb_short_s: 'Equal to the ground truth or wrong. A dash: the scanner has no such field.',
+    tb_short_t: 'Short fields: exact match', tb_short_s: 'Equal to the ground truth or wrong, per scanner. ZAP records no port and OpenVAS has no test id, so those rows are absent.',
     tb_field: 'Field', f_sev_c: 'Severity', f_port_c: 'Port', f_id_c: 'Test id',
     tb_err_t: 'Errors by type', tb_err_s: 'Occurrences across the 8 reports. The fine-tuned model trades blank fields for a new error: the block number.',
     tb_type: 'Type', e_blank: 'Blank field', e_cut: 'Truncated text', e_sev: 'Wrong severity', e_block: 'Wrong block number', e_lost: 'Vulnerability missed', e_extra: 'Extra text',
@@ -76,7 +77,8 @@
     cost96: 'US$ 0.96', ft: 'Applied AI Laboratory · UNIPAMPA · 2026', ft_fine: 'Beatriz Machado, Cristhian Kapelinski and Guilherme Klauberg',
     title: 'MulitaMiner · Applied AI Laboratory', table: 'Table', chart: 'Chart', slides: 'slides',
   };
-  const PT = { title: document.title, table: 'Tabela', chart: 'Gráfico', slides: 'slides', ch_train_t: 'Exemplos de treino por scanner' };
+  const PT = { title: document.title, table: 'Tabela', chart: 'Gráfico', slides: 'slides', ch_train_t: 'Exemplos de treino por scanner',
+    tb_field: 'Campo', f_sev_c: 'Severidade', f_port_c: 'Porta', f_id_c: 'Id do teste' };
   $$('[data-i18n]').forEach(el => { PT[el.dataset.i18n] = el.innerHTML; });
   let lang = root.lang === 'en' ? 'en' : 'pt-BR';
   const t = key => (lang === 'en' ? EN : PT)[key] ?? PT[key] ?? key;
@@ -156,7 +158,42 @@
     svg.addEventListener('mouseleave', hideTip);
     toggle.addEventListener('click', () => { table.hidden = !table.hidden; svg.hidden = !table.hidden; toggle.textContent = table.hidden ? t('table') : t('chart'); });
   }
+  // Short fields: one row per field x scanner, three dots on a 0-100% axis; the
+  // connector shows the spread between the worst and the best model on that row.
+  const SHORT = [
+    { g: 'f_sev_c', rows: [['OpenVAS', 100, 100, 100], ['Nessus', 96, 99, 100], ['Qualys', 57, 95, 100], ['ZAP', 100, 100, 100]] },
+    { g: 'f_port_c', rows: [['OpenVAS', 100, 100, 99], ['Nessus', 0, 68, 100], ['Qualys', 0, 67, 100]] },
+    { g: 'f_id_c', rows: [['Nessus', 99, 93, 100], ['Qualys', 87, 79, 100], ['ZAP', 77, 96, 100]] },
+  ];
+  function drawDots(el) {
+    const W = 560, padL = 96, padR = 14, padT = 6, rowH = 26, groupGap = 24;
+    const rows = []; let y = padT;
+    SHORT.forEach(gr => { y += groupGap; rows.push({ head: t(gr.g), y }); y += 8; gr.rows.forEach(r => { y += rowH; rows.push({ cat: r[0], v: r.slice(1), y }); }); });
+    const H = y + 34;
+    const x = v => padL + (v / 100) * (W - padL - padR);
+    let g = '<g class="grid">';
+    [0, 25, 50, 75, 100].forEach(v => { g += `<line x1="${x(v)}" x2="${x(v)}" y1="${padT}" y2="${H - 26}"/><text x="${x(v)}" y="${H - 8}" text-anchor="middle">${v}%</text>`; });
+    g += '</g>';
+    let body = '', hits = [];
+    rows.forEach(r => {
+      if (r.head) { body += `<text class="grp" x="0" y="${r.y + 4}">${r.head}</text>`; return; }
+      const [lo, tu, cl] = r.v;
+      body += `<text class="cat" x="${padL - 10}" y="${r.y + 4}" text-anchor="end">${r.cat}</text>`;
+      body += `<line class="link" x1="${x(Math.min(lo, tu, cl))}" x2="${x(Math.max(lo, tu, cl))}" y1="${r.y}" y2="${r.y}"/>`;
+      [['local', lo], ['cloud', cl], ['tuned', tu]].forEach(([k, v]) => { body += `<circle class="dot ${k}" cx="${x(v)}" cy="${r.y}" r="6"/>`; });
+      hits.push({ y: r.y - rowH / 2, text: `${r.cat}: ${SERIES[0].name()} ${lo}% · ${SERIES[1].name()} ${tu}% · ${SERIES[2].name()} ${cl}%` });
+    });
+    const hitRects = hits.map((h, i) => `<rect class="hit" data-i="${i}" x="0" y="${h.y}" width="${W}" height="${rowH}" tabindex="0"><title>${h.text}</title></rect>`).join('');
+    const legend = `<div class="legend">${SERIES.map(s => `<span><i class="sw ${s.key}"></i>${s.name()}</span>`).join('')}</div>`;
+    const twin = `<table class="twin" hidden><thead><tr><th>${t('tb_field')}</th><th>Scanner</th>${SERIES.map(s => `<th>${s.name()}</th>`).join('')}</tr></thead><tbody>${SHORT.map(gr => gr.rows.map((r, i) => `<tr><th>${i === 0 ? t(gr.g) : ''}</th><td style="text-align:left">${r[0]}</td>${r.slice(1).map(v => `<td>${v}%</td>`).join('')}</tr>`).join('')).join('')}</tbody></table>`;
+    el.innerHTML = `${legend}<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${t('tb_short_t')}">${g}${body}${hitRects}</svg><button type="button" class="toggle">${t('table')}</button>${twin}`;
+    const svg = $('svg', el), table = $('table.twin', el), toggle = $('.toggle', el);
+    svg.addEventListener('mousemove', ev => { const r = ev.target.closest('.hit'); if (r) showTip(ev, hits[+r.dataset.i].text); else hideTip(); });
+    svg.addEventListener('mouseleave', hideTip);
+    toggle.addEventListener('click', () => { table.hidden = !table.hidden; svg.hidden = !table.hidden; toggle.textContent = table.hidden ? t('table') : t('chart'); });
+  }
   function drawCharts() {
+    drawDots($('#chart-short'));
     drawChart($('#chart-train'), DATA.train);
     drawChart($('#chart-recall'), DATA.recall);
     drawChart($('#chart-text'), DATA.text);

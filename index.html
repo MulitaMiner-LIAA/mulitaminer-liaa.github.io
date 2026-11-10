@@ -153,15 +153,23 @@
     <p class="sub" data-i18n="re_sub">Média de 5 rodadas sobre os 8 relatórios de teste. O ajuste fino recupera quase toda a diferença entre o modelo local e o de nuvem.</p>
 
     <div class="card compare">
+      <div class="cmphead"><h3 data-i18n="cmp_t">Os três lado a lado</h3><span class="caption" data-i18n="cmp_s">8 relatórios de teste · média de 5 rodadas</span></div>
       <table class="cmp">
-        <thead><tr><th></th><th><i class="sw local"></i><span data-i18n="m_local">Local</span></th><th class="hl"><i class="sw tuned"></i><span data-i18n="m_tuned">Ajustado</span></th><th><i class="sw cloud"></i><span data-i18n="m_cloud">Nuvem</span></th></tr></thead>
+        <thead><tr>
+          <th></th>
+          <th><i class="sw local"></i><span data-i18n="m_local">Local</span><small>Qwen2.5 1,5B</small></th>
+          <th class="hl"><span class="tag" data-i18n="cmp_tag">sistema proposto</span><i class="sw tuned"></i><span data-i18n="m_tuned">Ajustado</span><small>Qwen2.5 1,5B + QLoRA</small></th>
+          <th><i class="sw cloud"></i><span data-i18n="m_cloud">Nuvem</span><small>DeepSeek V4.1 Flash</small></th>
+        </tr></thead>
         <tbody>
-          <tr><th data-i18n="c_found">Vulnerabilidades encontradas</th><td>92%<small>942</small></td><td class="hl">97%<small>998</small></td><td>99%<small data-num="1019">1.019</small></td></tr>
-          <tr><th data-i18n="c_invented">Vulnerabilidades inventadas</th><td>34</td><td class="hl">4</td><td>0</td></tr>
-          <tr><th data-i18n="c_blank">Campos em branco</th><td data-num="3818">3.818</td><td class="hl" data-num="1322">1.322</td><td>40</td></tr>
-          <tr><th data-i18n="c_time">Tempo para os 8 relatórios</th><td>39 min</td><td class="hl">33 min</td><td>98 min</td></tr>
-          <tr><th data-i18n="c_cost">Custo de API</th><td>US$ 0</td><td class="hl">US$ 0</td><td data-i18n="cost96">US$ 0,96</td></tr>
-          <tr><th data-i18n="c_inside">Dentro da organização</th><td data-i18n="yes">sim</td><td class="hl" data-i18n="yes">sim</td><td data-i18n="no">não</td></tr>
+          <tr><th><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span data-i18n="c_found">Vulnerabilidades encontradas</span></th>
+            <td>92%<small>942</small><i class="meter local" style="--v:92"></i></td><td class="hl">97%<small>998</small><i class="meter tuned" style="--v:97"></i></td><td>99%<small data-num="1019">1.019</small><i class="meter cloud" style="--v:99"></i></td></tr>
+          <tr><th><svg viewBox="0 0 24 24"><path d="M12 3 2.5 20h19L12 3z"/><path d="M12 10v4M12 17h.01"/></svg><span data-i18n="c_invented">Vulnerabilidades inventadas</span></th><td>34</td><td class="hl">4</td><td>0</td></tr>
+          <tr><th><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" stroke-dasharray="3 3"/></svg><span data-i18n="c_blank">Campos em branco</span></th><td data-num="3818">3.818</td><td class="hl" data-num="1322">1.322</td><td>40</td></tr>
+          <tr><th><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span data-i18n="c_time">Tempo para os 8 relatórios</span></th><td>39 min</td><td class="hl">33 min</td><td>98 min</td></tr>
+          <tr><th><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.5c-.5-1-1.5-1.5-2.5-1.5-1.7 0-2.5 1-2.5 2s1 1.6 2.5 2 2.5 1 2.5 2-.8 2-2.5 2c-1 0-2-.5-2.5-1.5M12 6v2M12 16v2"/></svg><span data-i18n="c_cost">Custo de API</span></th><td>US$ 0</td><td class="hl">US$ 0</td><td data-i18n="cost96">US$ 0,96</td></tr>
+          <tr><th><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span data-i18n="c_inside">Dentro da organização</span></th>
+            <td><span class="ok">✓ <span data-i18n="yes">sim</span></span></td><td class="hl"><span class="ok">✓ <span data-i18n="yes">sim</span></span></td><td><span class="nope">✕ <span data-i18n="no">não</span></span></td></tr>
         </tbody>
       </table>
     </div>
@@ -182,24 +190,8 @@
     <div class="grid2 charts">
       <div class="card">
         <h3 data-i18n="tb_short_t">Campos curtos: acerto exato</h3>
-        <p class="caption" data-i18n="tb_short_s">Igual ao gabarito ou errado. Um traço: o scanner não tem esse campo.</p>
-        <table class="data" id="tb-short">
-          <thead><tr><th data-i18n="tb_field">Campo</th><th>Scanner</th><th data-i18n="m_local">Local</th><th class="hl" data-i18n="m_tuned">Ajustado</th><th data-i18n="m_cloud">Nuvem</th></tr></thead>
-          <tbody>
-            <tr><th rowspan="4" data-i18n="f_sev_c">Severidade</th><td>OpenVAS</td><td>100%</td><td class="hl">100%</td><td>100%</td></tr>
-            <tr><td>Nessus</td><td>96%</td><td class="hl">99%</td><td>100%</td></tr>
-            <tr><td>Qualys</td><td>57%</td><td class="hl">95%</td><td>100%</td></tr>
-            <tr><td>ZAP</td><td>100%</td><td class="hl">100%</td><td>100%</td></tr>
-            <tr><th rowspan="4" data-i18n="f_port_c">Porta</th><td>OpenVAS</td><td>100%</td><td class="hl">100%</td><td>99%</td></tr>
-            <tr><td>Nessus</td><td>0%</td><td class="hl">68%</td><td>100%</td></tr>
-            <tr><td>Qualys</td><td>0%</td><td class="hl">67%</td><td>100%</td></tr>
-            <tr><td>ZAP</td><td>—</td><td class="hl">—</td><td>—</td></tr>
-            <tr><th rowspan="4" data-i18n="f_id_c">Id do teste</th><td>OpenVAS</td><td>—</td><td class="hl">—</td><td>—</td></tr>
-            <tr><td>Nessus</td><td>99%</td><td class="hl">93%</td><td>100%</td></tr>
-            <tr><td>Qualys</td><td>87%</td><td class="hl">79%</td><td>100%</td></tr>
-            <tr><td>ZAP</td><td>77%</td><td class="hl">96%</td><td>100%</td></tr>
-          </tbody>
-        </table>
+        <p class="caption" data-i18n="tb_short_s">Igual ao gabarito ou errado, por scanner. O ZAP não registra porta e o OpenVAS não tem id de teste, por isso essas linhas não aparecem.</p>
+        <div class="chart" id="chart-short"></div>
       </div>
       <div class="card">
         <h3 data-i18n="tb_err_t">Erros por tipo</h3>
