@@ -1,4 +1,4 @@
-/* Theme toggle, PT/EN switch and the three inline-SVG charts. No build step, no dependencies. */
+/* Theme toggle, PT/EN switch and the inline-SVG charts. No build step, no dependencies. */
 (function () {
   'use strict';
   const $ = (s, r) => (r || document).querySelector(s);
@@ -55,11 +55,11 @@
     re_kick: 'Results', re_h2: 'Almost as good as the cloud, in a third of the time, without the report leaving.',
     re_sub: 'Average of 5 runs over the 8 test reports. Fine-tuning recovers almost all of the gap between the local model and the cloud one.',
     cmp_t: 'The three side by side', cmp_s: '8 test reports · average of 5 runs', cmp_tag: 'proposed system',
-    c_found: 'Vulnerabilities found', c_invented: 'Vulnerabilities invented', c_blank: 'Blank fields', c_time: 'Time for the 8 reports', c_cost: 'API cost', c_inside: 'Inside the organization', yes: 'yes', no: 'no',
+    c_found: 'Vulnerabilities found', c_invented: 'Vulnerabilities invented', c_blank: 'Blank fields', c_time: 'Time for the 8 reports', c_cost: 'API cost', c_inside: 'Inside the organization', yes: 'yes', no: 'no', cost96: 'US$ 0.96',
     ch_recall_t: 'Vulnerabilities found, per scanner', ch_recall_s: 'Findings in the report that became a record. In percent.',
     ch_text_t: 'Description: how closely the text matches', ch_text_s: 'Word-by-word similarity with the scanner\'s description, from 0 to 1.',
-    tb_short_t: 'Short fields: exact match', tb_short_s: 'Equal to the ground truth or wrong, per scanner. ZAP records no port and OpenVAS has no test id, so those rows are absent.',
-    tb_field: 'Field', f_sev_c: 'Severity', f_port_c: 'Port', f_id_c: 'Test id',
+    tb_short_t: 'Short fields: exact match', tb_short_s: 'Equal to the ground truth or wrong. A dash: the scanner has no such field.',
+    tb_field: 'Field', f_sev_c: 'Severity', f_port_c: 'Port', f_id_c: 'Test id', na: 'not applicable',
     tb_err_t: 'Errors by type', tb_err_s: 'Occurrences across the 8 reports. The fine-tuned model trades blank fields for a new error: the block number.',
     tb_type: 'Type', e_blank: 'Blank field', e_cut: 'Truncated text', e_sev: 'Wrong severity', e_block: 'Wrong block number', e_lost: 'Vulnerability missed', e_extra: 'Extra text',
     fd1_b: 'Where the fine-tuned model fails.', fd1: 'On OpenVAS, the scanner with the most training examples, the description is left blank in half of the findings (local 90%, cloud 100% filled).',
@@ -74,14 +74,16 @@
     tm_kick: 'Team', tm_h2: 'Who made it.',
     tm_cap: 'Applied AI Laboratory course, Federal University of Pampa, 2026. MulitaMiner is also a research project of the group; the code and the model are public.',
     lk_code: 'Code on GitHub ↗', lk_model: 'Model on Hugging Face ↗',
-    cost96: 'US$ 0.96', ft: 'Applied AI Laboratory · UNIPAMPA · 2026', ft_fine: 'Beatriz Machado, Cristhian Kapelinski and Guilherme Klauberg',
+    ft: 'Applied AI Laboratory · UNIPAMPA · 2026', ft_fine: 'Beatriz Machado, Cristhian Kapelinski and Guilherme Klauberg',
     title: 'MulitaMiner · Applied AI Laboratory', table: 'Table', chart: 'Chart', slides: 'slides',
   };
+  // Portuguese strings that live only in the script (everything else is read from the HTML).
   const PT = { title: document.title, table: 'Tabela', chart: 'Gráfico', slides: 'slides', ch_train_t: 'Exemplos de treino por scanner',
-    tb_field: 'Campo', f_sev_c: 'Severidade', f_port_c: 'Porta', f_id_c: 'Id do teste' };
+    tb_field: 'Campo', f_sev_c: 'Severidade', f_port_c: 'Porta', f_id_c: 'Id do teste', na: 'não se aplica' };
   $$('[data-i18n]').forEach(el => { PT[el.dataset.i18n] = el.innerHTML; });
   let lang = root.lang === 'en' ? 'en' : 'pt-BR';
   const t = key => (lang === 'en' ? EN : PT)[key] ?? PT[key] ?? key;
+  function fmt(v, d) { return v.toLocaleString(lang === 'en' ? 'en-US' : 'pt-BR', { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 }); }
   const applyLang = () => {
     root.lang = lang;
     document.title = t('title');
@@ -96,9 +98,6 @@
     applyLang();
   }));
 
-  // ---- numbers in the reader's locale ----
-  function fmt(v, d) { return v.toLocaleString(lang === 'en' ? 'en-US' : 'pt-BR', { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 }); }
-
   // ---- charts: thin grouped columns, 4px rounded caps, hairline grid, legend, hover tooltip, table twin ----
   const SERIES = [
     { key: 'local', name: () => t('m_local') },
@@ -107,96 +106,110 @@
   ];
   const SCANNERS = ['OpenVAS', 'Nessus', 'Qualys', 'ZAP'];
   const DATA = {
-    recall: { cats: SCANNERS, max: 100, step: 25, unit: '%', dec: 0, label: 'tuned',
+    recall: { cats: SCANNERS, max: 100, step: 25, unit: '%', dec: 0,
       values: { local: [95, 90, 90, 96], tuned: [99, 97, 96, 100], cloud: [97, 100, 100, 100] } },
-    text: { cats: SCANNERS, max: 1, step: 0.25, unit: '', dec: 2, label: 'tuned',
+    text: { cats: SCANNERS, max: 1, step: 0.25, unit: '', dec: 2,
       values: { local: [0.86, 0.00, 0.75, 0.70], tuned: [0.50, 0.99, 0.95, 1.00], cloud: [0.79, 1.00, 0.98, 1.00] } },
     train: { cats: ['OpenVAS', 'Qualys', 'Nessus', 'ZAP'], max: 6000, step: 2000, unit: '', dec: 0, single: true,
       values: { tuned: [5459, 910, 381, 89] } },
   };
+  // Short fields, exact match per scanner; null = the scanner has no such field.
+  const SHORT = [
+    { g: 'f_sev_c', values: { local: [100, 96, 57, 100], tuned: [100, 99, 95, 100], cloud: [100, 100, 100, 100] } },
+    { g: 'f_port_c', values: { local: [100, 0, 0, null], tuned: [100, 68, 67, null], cloud: [99, 100, 100, null] } },
+    { g: 'f_id_c', values: { local: [null, 99, 87, 77], tuned: [null, 93, 79, 96], cloud: [null, 100, 100, 100] } },
+  ];
   const tip = $('#tip');
   const showTip = (ev, text) => { tip.textContent = text; tip.hidden = false; moveTip(ev); };
   const moveTip = ev => { tip.style.left = (ev.clientX + 12) + 'px'; tip.style.top = (ev.clientY - 30) + 'px'; };
   const hideTip = () => { tip.hidden = true; };
 
+  // Column with a 4px rounded top, square at the baseline.
   const bar = (x, y, w, h, cls) => {
-    // 4px rounded top, square at the baseline; degenerate heights fall back to a plain rect
-    const r = Math.min(4, w / 2, h);
     if (h <= 0) return '';
+    const r = Math.min(4, w / 2, h);
     return `<path class="bar ${cls}" d="M${x} ${y + h} V${y + r} Q${x} ${y} ${x + r} ${y} H${x + w - r} Q${x + w} ${y} ${x + w} ${y + r} V${y + h} Z"/>`;
   };
+  const width = el => Math.max(300, Math.min(560, el.clientWidth || 560));
 
-  function drawChart(el, spec) {
-    const series = spec.single ? [SERIES[1]] : SERIES;
-    const W = 560, H = 260, padL = 44, padR = 8, padT = 18, padB = 34;
+  // One grouped-column plot. Returns the SVG markup and the hover targets.
+  function plot(spec, W, H, series) {
+    const padL = 44, padR = 8, padT = 16, padB = 30;
     const plotW = W - padL - padR, plotH = H - padT - padB;
     const slot = plotW / spec.cats.length;
     const gap = 2, barW = Math.min(24, (slot * 0.62 - gap * (series.length - 1)) / series.length);
     const groupW = barW * series.length + gap * (series.length - 1);
     const y = v => padT + plotH - (v / spec.max) * plotH;
     let g = '<g class="grid">';
-    for (let v = 0; v <= spec.max + 1e-9; v += spec.step) g += `<line x1="${padL}" x2="${W - padR}" y1="${y(v)}" y2="${y(v)}"/><text x="${padL - 8}" y="${y(v) + 4}" text-anchor="end">${fmt(v, spec.dec && spec.max <= 1 ? 2 : 0)}${spec.unit}</text>`;
+    for (let v = 0; v <= spec.max + 1e-9; v += spec.step) g += `<line x1="${padL}" x2="${W - padR}" y1="${y(v)}" y2="${y(v)}"/><text x="${padL - 8}" y="${y(v) + 4}" text-anchor="end">${fmt(v, spec.max <= 1 ? 2 : 0)}${spec.unit}</text>`;
     g += '</g>';
-    let bars = '', labels = '', cats = '', hits = [];
+    let bars = '', labels = '', cats = '';
+    const hits = [];
     spec.cats.forEach((c, i) => {
-      const gx = padL + slot * i + (slot - groupW) / 2;
-      cats += `<text class="cat" x="${padL + slot * i + slot / 2}" y="${H - 10}" text-anchor="middle">${c}</text>`;
+      const gx = padL + slot * i + (slot - groupW) / 2, cx = padL + slot * i + slot / 2;
+      cats += `<text class="cat" x="${cx}" y="${H - 8}" text-anchor="middle">${c}</text>`;
+      if (series.every(s => spec.values[s.key][i] == null)) {   // the scanner has no such field
+        labels += `<text class="na" x="${cx}" y="${y(0) - 8}" text-anchor="middle">—</text>`;
+        hits.push({ x: gx - gap, w: groupW + gap * 2, text: `${c}: ${t('na')}` });
+        return;
+      }
+      const parts = [];
       series.forEach((s, k) => {
-        const v = spec.values[s.key][i], x = gx + k * (barW + gap), top = y(v), h = padT + plotH - top;
-        bars += bar(x, top, barW, h, s.key);
-        if (spec.single || s.key === spec.label) labels += `<text class="val" x="${x + barW / 2}" y="${top - 5}" text-anchor="middle">${fmt(v, spec.dec)}${spec.unit}</text>`;
-        hits.push({ x: x - gap, w: barW + gap * 2, text: `${spec.single ? c : s.name() + ' · ' + c}: ${fmt(v, spec.dec)}${spec.unit}` });
+        const v = spec.values[s.key][i], x = gx + k * (barW + gap);
+        if (v == null) return;
+        const tp = y(v);
+        bars += bar(x, tp, barW, padT + plotH - tp, s.key);
+        if (spec.single || s.key === 'tuned' || v === 0) labels += `<text class="val" x="${x + barW / 2}" y="${tp - 5}" text-anchor="middle">${fmt(v, spec.dec)}${spec.unit}</text>`;
+        parts.push(`${s.name()} ${fmt(v, spec.dec)}${spec.unit}`);
       });
+      hits.push({ x: gx - gap, w: groupW + gap * 2, text: `${c}: ${spec.single ? parts[0].replace(/^\S+ /, '') : parts.join(' · ')}` });
     });
     const hitRects = hits.map((h, i) => `<rect class="hit" data-i="${i}" x="${h.x}" y="${padT}" width="${h.w}" height="${plotH}" tabindex="0"><title>${h.text}</title></rect>`).join('');
-    const legend = spec.single ? '' : `<div class="legend">${series.map(s => `<span><i class="sw ${s.key}"></i>${s.name()}</span>`).join('')}</div>`;
-    const title = el.dataset.titleKey ? `<div class="kick" style="margin:0 0 .5rem">${t(el.dataset.titleKey)}</div>` : '';
-    const twin = `<table class="twin" hidden><thead><tr><th></th>${series.map(s => `<th>${spec.single ? t('ch_train_t') : s.name()}</th>`).join('')}</tr></thead><tbody>${spec.cats.map((c, i) => `<tr><th>${c}</th>${series.map(s => `<td>${fmt(spec.values[s.key][i], spec.dec)}${spec.unit}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
-    el.innerHTML = `${title}${legend}<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${el.dataset.title || ''}">${g}<g class="axis"><line x1="${padL}" x2="${W - padR}" y1="${y(0)}" y2="${y(0)}"/></g>${bars}${labels}${cats}${hitRects}</svg><button type="button" class="toggle">${t('table')}</button>${twin}`;
-    const svg = $('svg', el), table = $('table.twin', el), toggle = $('.toggle', el);
-    svg.addEventListener('mousemove', ev => { const r = ev.target.closest('.hit'); if (r) showTip(ev, hits[+r.dataset.i].text); else hideTip(); });
-    svg.addEventListener('mouseleave', hideTip);
-    toggle.addEventListener('click', () => { table.hidden = !table.hidden; svg.hidden = !table.hidden; toggle.textContent = table.hidden ? t('table') : t('chart'); });
+    const svg = `<svg viewBox="0 0 ${W} ${H}" role="img">${g}<g class="axis"><line x1="${padL}" x2="${W - padR}" y1="${y(0)}" y2="${y(0)}"/></g>${bars}${labels}${cats}${hitRects}</svg>`;
+    return { svg, hits };
   }
-  // Short fields: one row per field x scanner, three dots on a 0-100% axis; the
-  // connector shows the spread between the worst and the best model on that row.
-  const SHORT = [
-    { g: 'f_sev_c', rows: [['OpenVAS', 100, 100, 100], ['Nessus', 96, 99, 100], ['Qualys', 57, 95, 100], ['ZAP', 100, 100, 100]] },
-    { g: 'f_port_c', rows: [['OpenVAS', 100, 100, 99], ['Nessus', 0, 68, 100], ['Qualys', 0, 67, 100]] },
-    { g: 'f_id_c', rows: [['Nessus', 99, 93, 100], ['Qualys', 87, 79, 100], ['ZAP', 77, 96, 100]] },
-  ];
-  function drawDots(el) {
-    const W = 560, padL = 96, padR = 14, padT = 6, rowH = 26, groupGap = 24;
-    const rows = []; let y = padT;
-    SHORT.forEach(gr => { y += groupGap; rows.push({ head: t(gr.g), y }); y += 8; gr.rows.forEach(r => { y += rowH; rows.push({ cat: r[0], v: r.slice(1), y }); }); });
-    const H = y + 34;
-    const x = v => padL + (v / 100) * (W - padL - padR);
-    let g = '<g class="grid">';
-    [0, 25, 50, 75, 100].forEach(v => { g += `<line x1="${x(v)}" x2="${x(v)}" y1="${padT}" y2="${H - 26}"/><text x="${x(v)}" y="${H - 8}" text-anchor="middle">${v}%</text>`; });
-    g += '</g>';
-    let body = '', hits = [];
-    rows.forEach(r => {
-      if (r.head) { body += `<text class="grp" x="0" y="${r.y + 4}">${r.head}</text>`; return; }
-      const [lo, tu, cl] = r.v;
-      body += `<text class="cat" x="${padL - 10}" y="${r.y + 4}" text-anchor="end">${r.cat}</text>`;
-      body += `<line class="link" x1="${x(Math.min(lo, tu, cl))}" x2="${x(Math.max(lo, tu, cl))}" y1="${r.y}" y2="${r.y}"/>`;
-      [['local', lo], ['cloud', cl], ['tuned', tu]].forEach(([k, v]) => { body += `<circle class="dot ${k}" cx="${x(v)}" cy="${r.y}" r="6"/>`; });
-      hits.push({ y: r.y - rowH / 2, text: `${r.cat}: ${SERIES[0].name()} ${lo}% · ${SERIES[1].name()} ${tu}% · ${SERIES[2].name()} ${cl}%` });
+  const legendOf = series => `<div class="legend">${series.map(s => `<span><i class="sw ${s.key}"></i>${s.name()}</span>`).join('')}</div>`;
+  const cell = (v, spec) => v == null ? '—' : fmt(v, spec.dec) + spec.unit;
+  function wire(el, hitsBySvg) {
+    $$('svg', el).forEach((svg, n) => {
+      svg.addEventListener('mousemove', ev => { const r = ev.target.closest('.hit'); if (r) showTip(ev, hitsBySvg[n][+r.dataset.i].text); else hideTip(); });
+      svg.addEventListener('mouseleave', hideTip);
     });
-    const hitRects = hits.map((h, i) => `<rect class="hit" data-i="${i}" x="0" y="${h.y}" width="${W}" height="${rowH}" tabindex="0"><title>${h.text}</title></rect>`).join('');
-    const legend = `<div class="legend">${SERIES.map(s => `<span><i class="sw ${s.key}"></i>${s.name()}</span>`).join('')}</div>`;
-    const twin = `<table class="twin" hidden><thead><tr><th>${t('tb_field')}</th><th>Scanner</th>${SERIES.map(s => `<th>${s.name()}</th>`).join('')}</tr></thead><tbody>${SHORT.map(gr => gr.rows.map((r, i) => `<tr><th>${i === 0 ? t(gr.g) : ''}</th><td style="text-align:left">${r[0]}</td>${r.slice(1).map(v => `<td>${v}%</td>`).join('')}</tr>`).join('')).join('')}</tbody></table>`;
-    el.innerHTML = `${legend}<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${t('tb_short_t')}">${g}${body}${hitRects}</svg><button type="button" class="toggle">${t('table')}</button>${twin}`;
-    const svg = $('svg', el), table = $('table.twin', el), toggle = $('.toggle', el);
-    svg.addEventListener('mousemove', ev => { const r = ev.target.closest('.hit'); if (r) showTip(ev, hits[+r.dataset.i].text); else hideTip(); });
-    svg.addEventListener('mouseleave', hideTip);
-    toggle.addEventListener('click', () => { table.hidden = !table.hidden; svg.hidden = !table.hidden; toggle.textContent = table.hidden ? t('table') : t('chart'); });
+    const table = $('table.twin', el), toggle = $('.toggle', el), plots = $('.plots', el);
+    toggle.addEventListener('click', () => { table.hidden = !table.hidden; plots.hidden = !table.hidden; toggle.textContent = table.hidden ? t('table') : t('chart'); });
   }
+
+  function drawChart(el, spec) {
+    const series = spec.single ? [SERIES[1]] : SERIES;
+    const { svg, hits } = plot(spec, width(el), 260, series);
+    const title = el.dataset.titleKey ? `<div class="kick" style="margin:0 0 .5rem">${t(el.dataset.titleKey)}</div>` : '';
+    const twin = `<table class="twin" hidden><thead><tr><th></th>${series.map(s => `<th>${spec.single ? t('ch_train_t') : s.name()}</th>`).join('')}</tr></thead><tbody>${spec.cats.map((c, i) => `<tr><th>${c}</th>${series.map(s => `<td>${cell(spec.values[s.key][i], spec)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+    el.innerHTML = `${title}${spec.single ? '' : legendOf(series)}<div class="plots">${svg}</div><button type="button" class="toggle">${t('table')}</button>${twin}`;
+    wire(el, [hits]);
+  }
+
+  // Short fields: three small multiples (one per field), same scale and legend.
+  function drawMultiples(el) {
+    const hitsBySvg = [];
+    const plots = SHORT.map(f => {
+      const spec = { cats: SCANNERS, max: 100, step: 50, unit: '%', dec: 0, values: f.values };
+      const { svg, hits } = plot(spec, width(el), 150, SERIES);
+      hitsBySvg.push(hits);
+      return `<div class="multi"><div class="kick">${t(f.g)}</div>${svg}</div>`;
+    }).join('');
+    const spec = { unit: '%', dec: 0 };
+    const twin = `<table class="twin" hidden><thead><tr><th>${t('tb_field')}</th><th>Scanner</th>${SERIES.map(s => `<th>${s.name()}</th>`).join('')}</tr></thead><tbody>${SHORT.map(f => SCANNERS.map((c, i) => `<tr><th>${i === 0 ? t(f.g) : ''}</th><td style="text-align:left">${c}</td>${SERIES.map(s => `<td>${cell(f.values[s.key][i], spec)}</td>`).join('')}</tr>`).join('')).join('')}</tbody></table>`;
+    el.innerHTML = `${legendOf(SERIES)}<div class="plots">${plots}</div><button type="button" class="toggle">${t('table')}</button>${twin}`;
+    wire(el, hitsBySvg);
+  }
+
   function drawCharts() {
-    drawDots($('#chart-short'));
     drawChart($('#chart-train'), DATA.train);
     drawChart($('#chart-recall'), DATA.recall);
     drawChart($('#chart-text'), DATA.text);
+    drawMultiples($('#chart-short'));
   }
+  let resizeTimer;
+  addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(drawCharts, 150); });
   applyLang();
 })();
