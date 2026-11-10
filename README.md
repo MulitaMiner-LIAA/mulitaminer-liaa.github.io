@@ -34,6 +34,7 @@ gerados automaticamente, pareando o PDF com a planilha que o próprio scanner
 exporta. Um scanner novo entra com um arquivo JSON e um prompt, sem mudar
 código.
 
+Demo online: <https://mulitaminer.anonshield.org>.
 Código da ferramenta: <https://github.com/AnonShield/MulitaMiner2>.
 Modelo ajustado: <https://huggingface.co/Inari18/mulita-extractor-qwen2.5-1.5b>.
 

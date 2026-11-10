@@ -78,6 +78,7 @@
     t10_h: 'Results with the fine-tuned model', t10_p: 'The local model trained on the ground truth, and the three side by side.',
     tm_kick: 'Team', tm_h2: 'Who made it.',
     tm_cap: 'Applied AI Laboratory course, Federal University of Pampa, 2026. MulitaMiner is also a research project of the group; the code and the model are public.',
+    lk_demo: 'Try the demo ↗', hero_demo: 'Try the demo ↗',
     lk_code: 'Code on GitHub ↗', lk_model: 'Model on Hugging Face ↗',
     ft: 'Applied AI Laboratory · UNIPAMPA · 2026', ft_fine: 'Beatriz Machado, Cristhian Kapelinski and Guilherme Klauberg',
     title: 'MulitaMiner · Applied AI Laboratory', table: 'Table', chart: 'Chart', slides: 'slides', pages: 'pages',
