@@ -204,10 +204,21 @@ table{border-collapse:collapse;width:100%;font-size:.92rem}
 .finding b{color:var(--text)}
 
 /* tasks, team, footer */
-.tasks{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.6rem}
-@media (max-width:860px){.tasks{grid-template-columns:1fr 1fr}}
-@media (max-width:560px){.tasks{grid-template-columns:1fr}}
-.task{text-decoration:none;color:var(--text);display:flex;flex-direction:column;transition:border-color .15s,transform .15s,box-shadow .2s}
+.tl-wrap{position:relative;margin-top:1.4rem}
+.tasks{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding:.4rem 2px 1rem;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 72px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 72px),transparent)}
+.tasks::-webkit-scrollbar{display:none}
+.tasks.at-end{-webkit-mask-image:none;mask-image:none}
+.task{flex:0 0 min(300px,80vw);scroll-snap-align:start;text-decoration:none;color:var(--text);display:flex;flex-direction:column;transition:border-color .15s,transform .15s,box-shadow .2s}
+.task .phase{font:600 .62rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
+.tl-btn{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:999px;border:1px solid var(--border2);background:var(--raised);color:var(--text);font:400 1.4rem/1 var(--sans);cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.18);z-index:2;display:flex;align-items:center;justify-content:center;padding:0 0 3px}
+.tl-btn:hover{border-color:var(--accent);color:var(--accent-h)}
+.tl-btn:disabled{opacity:.3;cursor:default}
+.tl-btn.prev{left:-19px}.tl-btn.next{right:-19px}
+@media (max-width:860px){
+  .tasks{display:grid;grid-template-columns:1fr;overflow:visible;-webkit-mask-image:none;mask-image:none;padding:0}
+  .task{flex:none}
+  .tl-btn{display:none}
+}
 .task:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 12px 40px rgba(232,93,42,.12)}
 .task .n{font:600 1.6rem/1 var(--mono);color:var(--accent);margin-bottom:.8rem}
 .task p{flex:1}

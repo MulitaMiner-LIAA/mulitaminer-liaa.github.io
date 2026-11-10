@@ -64,6 +64,7 @@
     tb_type: 'Type', e_blank: 'Blank field', e_cut: 'Truncated text', e_sev: 'Wrong severity', e_block: 'Wrong block number', e_lost: 'Vulnerability missed', e_extra: 'Extra text',
     fd1_b: 'Where the fine-tuned model fails.', fd1: 'On OpenVAS, the scanner with the most training examples, the description is left blank in half of the findings (local 90%, cloud 100% filled).',
     fd2_b: 'Counting instead of reading.', fd2: 'In 166 batches the model answered "block 1, block 2" for blocks 6 and 7. A number outside the batch is discarded and the batch redone, so it never becomes a wrong record.',
+    ph_prop: 'Proposal', ph_build: 'Build', ph_res: 'Results',
     at_kick: 'Activities', at_h2: 'The project, task by task.', at_sub: 'The course deliverables, in order: documents, presentations and code.',
     t1_h: 'Ideation with AI', t1_p: 'Choosing the topic and the first proposal, using AI tools to explore problems and solutions.',
     t2_h: 'Investigation and feasibility', t2_p: 'Problem, data, AI approach, related work and feasibility: the revised proposal.',
@@ -213,6 +214,20 @@
     drawChart($('#chart-text'), DATA.text);
     drawMultiples($('#chart-short'));
   }
+  // Activities strip: arrows move one card; the right-edge fade goes away at the end.
+  const strip = $('#tasks'), prev = $('#tasks-prev'), next = $('#tasks-next');
+  const stepOf = () => { const c = strip.querySelector('.task'); return c ? c.getBoundingClientRect().width + 16 : 300; };
+  const syncStrip = () => {
+    const max = strip.scrollWidth - strip.clientWidth - 1;
+    prev.disabled = strip.scrollLeft <= 0; next.disabled = strip.scrollLeft >= max;
+    strip.classList.toggle('at-end', strip.scrollLeft >= max);
+  };
+  prev.addEventListener('click', () => strip.scrollBy({ left: -stepOf(), behavior: 'smooth' }));
+  next.addEventListener('click', () => strip.scrollBy({ left: stepOf(), behavior: 'smooth' }));
+  strip.addEventListener('scroll', syncStrip, { passive: true });
+  addEventListener('resize', syncStrip);
+  syncStrip();
+
   let resizeTimer;
   addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(drawCharts, 150); });
   applyLang();
