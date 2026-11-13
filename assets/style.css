@@ -105,6 +105,8 @@ nav a.cta:hover{background:var(--btn-h)}
 
 /* sections */
 .block{padding:80px 0 0}
+.video{margin-top:2rem;aspect-ratio:16/9;max-width:100%;background:var(--raised);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden}
+.video iframe{display:block;width:100%;height:100%;border:0}
 .objective{display:grid;grid-template-columns:1fr 1.2fr;gap:2rem;align-items:center;margin-top:2.6rem;padding:1.6rem;background:var(--raised);border:1px solid var(--border);border-radius:var(--r-lg)}
 .objective h3{font-size:1.4rem;font-weight:700}
 .objective h3+p{color:var(--text2);margin-top:.6rem}

@@ -42,6 +42,8 @@
     s4_h: 'Consolidate', s4_p: 'Severity and CVSS normalised, duplicates merged. Host, port and protocol come from rules, not from the model.',
     s5_h: 'Export', s5_p: 'One record per finding, as JSON, XLSX, CSV, SARIF, CSAF or DefectDojo. Switching models is switching one argument.',
     how_note_b: 'A new scanner:', how_note: 'one JSON configuration file and one prompt, no code changes.',
+    vi_kick: 'Video', vi_h2: 'MulitaMiner in three minutes.',
+    vi_sub: 'A short story introducing MulitaMiner and demonstrating how it works, from processing security reports to generating structured results. Audio in English, with Portuguese subtitles.',
     me_kick: 'Method', me_h2: 'The ground truth comes from the tool itself.',
     me_sub: 'The scanner exports the PDF and the spreadsheet of the same scan. Pairing the two by host and finding id turns every vulnerability into a question-and-answer pair, with no manual labelling.',
     me_data_h: 'Training data', me_t1: 'reports: PDF + machine export', me_t2: 'examples · 6,187 train / 654 validation',
